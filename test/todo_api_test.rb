@@ -19,12 +19,33 @@ class TodoAPITest < MiniTest::Test
     assert_equal JSON.parse(last_response.body), []
   end
 
+  def test_get_todos_with_tag_foo
+    post '/', {title: 'one', tags: %w(foo bar)}
+    post '/', {title: 'two', tags: %w(bar baz)}
+    post '/', {title: 'three', tags: %w(baz qux)}
+
+    get '/', {tag: 'bar'}
+    assert_equal JSON.parse(last_response.body), [{title: 'one'}, {title: 'two'}]
+  end
+
   def test_post_to_root_creates_new_todo
     post '/', {title: 'foo'}
     assert last_response.created?
 
     created_todo = JSON.parse(last_response.body)
     assert_equal 'foo', created_todo['title']
+    assert !created_todo['completed']
+    assert_match (/http:\/\/example.org\/\w/), created_todo['url']
+  end
+
+  def test_post_to_root_creates_new_todo_with_tags
+    tags = ['tag1', 'tag2']
+    post '/', {title: 'foo', tags: tags}
+    assert last_response.created?
+
+    created_todo = JSON.parse(last_response.body)
+    assert_equal 'foo', created_todo['title']
+    assert_equal tags, created_todo['tags']
     assert !created_todo['completed']
     assert_match (/http:\/\/example.org\/\w/), created_todo['url']
   end
