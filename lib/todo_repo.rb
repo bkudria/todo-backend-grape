@@ -5,9 +5,9 @@ class TodoRepo
     def todos(tag = nil)
       @todos ||= []
       if tag
-        @todos
-      else
         @todos.select { |todo| too.tags.include? tag }
+      else
+        @todos
       end
     end
 
