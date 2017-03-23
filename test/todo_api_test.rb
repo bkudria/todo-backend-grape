@@ -25,7 +25,8 @@ class TodoAPITest < MiniTest::Test
     post '/', {title: 'three', tags: %w(baz qux)}
 
     get '/', {tag: 'bar'}
-    assert_equal JSON.parse(last_response.body), [{title: 'one'}, {title: 'two'}]
+    assert_equal JSON.parse(last_response.body).map(&:title), ['one', 'two']
+    assert_equal JSON.parse(last_response.body).map(&:tags), [%w(foo bar), %w(bar baz)]
   end
 
   def test_post_to_root_creates_new_todo
