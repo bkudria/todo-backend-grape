@@ -2,9 +2,13 @@ RecordNotFound = Class.new(StandardError)
 
 class TodoRepo
   class << self
-    def todos
+    def todos(tag = nil)
       @todos ||= []
-      @todos
+      if tag
+        @todos
+      else
+        @todos.select { |todo| too.tags.include? tag }
+      end
     end
 
     def add(params, host)

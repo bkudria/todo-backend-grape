@@ -15,7 +15,7 @@ class TodoAPI < Grape::API
   end
 
   get do
-    TodoRepo.todos
+    TodoRepo.todos(params[:tag])
   end
 
   delete do
